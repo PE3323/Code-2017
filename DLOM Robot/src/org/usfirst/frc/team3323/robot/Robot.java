@@ -92,6 +92,7 @@ public class Robot extends IterativeRobot {
 	
 	@Override
 	public void autonomousInit() {
+		System.out.println("Github is the pure being of all evil");
 	}
 
 	@Override
