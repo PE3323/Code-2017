@@ -88,11 +88,12 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("DriveMotorLCurrent", powerBoard.getCurrent(1));
 		SmartDashboard.putNumber("ShooterMotorCurrent", powerBoard.getCurrent(2));
 		SmartDashboard.putNumber("DriveMotorRCurrent", powerBoard.getCurrent(3));
+		SmartDashboard.putNumber("Launcher Double",(launcherMotor.get()));
 	}
 	
 	@Override
 	public void autonomousInit() {
-		System.out.println("Github is the pure being of all evil");
+		System.out.println("Github is the essence of pure evil");
 	}
 
 	@Override
@@ -104,9 +105,7 @@ public class Robot extends IterativeRobot {
 		
 		Scheduler.getInstance().run();
 		robotDrive.tankDrive(joystickLeft,joystickRight);
-		double launcherSpeed = joystickRight.getAxis(AxisType.kZ);
-		launcherMotor.set(launcherSpeed);
-		
+		launcherMotor.set((-joystickRight.getAxis(AxisType.kZ)+1)/2);
 		
 	}
 
