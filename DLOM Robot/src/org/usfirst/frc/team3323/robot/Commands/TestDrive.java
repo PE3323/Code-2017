@@ -1,5 +1,6 @@
-package org.usfirst.frc.team3323.robot;
+package org.usfirst.frc.team3323.robot.Commands;
 
+import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -7,6 +8,7 @@ public class TestDrive extends Command {
 
 	private SpeedController driveMotorRight;
 	private SpeedController driveMotorLeft;
+	private RobotDrive Robotdrive;
 	
 	public TestDrive(SpeedController driveMotorLeft,SpeedController driveMotorRight)
 	{
@@ -15,13 +17,12 @@ public class TestDrive extends Command {
 	}
 	
 	@Override
-	protected boolean isFinished() {
-		// TODO Auto-generated method stub
+	protected boolean isFinished()
+	{
 		return false;
 	}
 	protected void execute() {
-		driveMotorLeft.set(-0.25);
-		driveMotorRight.set(0.25);
+		Robotdrive.drive(.25, 0);
 	}
 	protected void end() 
 	{

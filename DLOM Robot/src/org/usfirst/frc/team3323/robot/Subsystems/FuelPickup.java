@@ -1,36 +1,54 @@
-package org.usfirst.frc.team3323.robot;
+package org.usfirst.frc.team3323.robot.Subsystems;
 
+import org.usfirst.frc.team3323.robot.Commands.StopPickup;
+import org.usfirst.frc.team3323.robot.Commands.PickupDirectionToggle;
+import org.usfirst.frc.team3323.robot.Commands.StartPickup;
+
+import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class FuelPickup extends Subsystem
 {
-
-	private SpeedController fuelPickupMotor;
+	private SpeedController pickupMotor = new Spark(5);
 	private double pickupDirection = 1;
-
-	public FuelPickup(SpeedController feederMotor) 
-	{
-		this.fuelPickupMotor = feederMotor;
-	}
 	
-	@Override
 	protected void initDefaultCommand()
 	{
 		setDefaultCommand(new StopPickup(this));
 	}
+	
+	public StopPickup getStopPickup()
+	{
+		return new StopPickup(this);
+	}
+	
+	public StartPickup getStartPickup()
+	{
+		return new StartPickup(this);
+	}
+	
+	public PickupDirectionToggle getPickupDirectionToggle()
+	{
+		return new PickupDirectionToggle(this);
+	}
+	
+	public void init()
+    {
+    	stop();
+    }
 
 	public void start()
 	{
-		fuelPickupMotor.set(pickupDirection);
+		pickupMotor.set(pickupDirection);
 		
 		SmartDashboard.putString("Pickup State","On");
 	}
 	
 	public void stop()
 	{
-		fuelPickupMotor.set(0);
+		pickupMotor.set(0);
 		
 		SmartDashboard.putString("Pickup State","Off");
 	}

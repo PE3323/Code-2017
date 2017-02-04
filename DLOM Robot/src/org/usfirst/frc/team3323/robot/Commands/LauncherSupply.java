@@ -1,4 +1,4 @@
-package org.usfirst.frc.team3323.robot;
+package org.usfirst.frc.team3323.robot.Commands;
 
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Command;
@@ -13,8 +13,8 @@ public class LauncherSupply extends Command {
 	}
 	
 	@Override
-	protected boolean isFinished() {
-		// TODO Auto-generated method stub
+	protected boolean isFinished()
+	{
 		return false;
 	}
 	protected void execute() {

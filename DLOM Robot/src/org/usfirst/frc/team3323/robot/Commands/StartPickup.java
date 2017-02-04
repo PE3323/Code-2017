@@ -1,4 +1,6 @@
-package org.usfirst.frc.team3323.robot;
+package org.usfirst.frc.team3323.robot.Commands;
+
+import org.usfirst.frc.team3323.robot.Subsystems.FuelPickup;
 
 import edu.wpi.first.wpilibj.command.Command;
 
