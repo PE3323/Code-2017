@@ -56,9 +56,9 @@ public class FuelPickup extends Subsystem
 	public void togglePickupDirection()
 	{
 		if(pickupDirection>0)
-			pickupDirection = -1;
+			pickupDirection = -.5;
 		else
-			pickupDirection = 1;
+			pickupDirection = .5;
 		
 		if(pickupDirection>0)
 			   SmartDashboard.putString("Pickup Direction","Intake");

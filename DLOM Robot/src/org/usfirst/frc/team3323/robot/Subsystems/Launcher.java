@@ -36,10 +36,11 @@ public class Launcher extends Subsystem {
 	{
 		return new StartSupply(this);
 	}
-	public void on()
-	{
-		launcherMotor.set((-joystick.getAxis(AxisType.kZ)+1)/2);
-	}
+	
+	public void init()
+    {
+    	off();
+    }
 	
 	public void shoot()
 	{
@@ -49,7 +50,7 @@ public class Launcher extends Subsystem {
 	public void off()
 	{
 		supplyMotor.set(0);
-		launcherMotor.set(0);
+		launcherMotor.set((-joystick.getAxis(AxisType.kZ)+1)/2);
 	}
 	
 }

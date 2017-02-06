@@ -49,7 +49,9 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		
-		
+		launcher.init();
+		winch.init();
+		fuelPickup.init();
 		driveTrain.tankDrive(joystickRight,joystickLeft);
 		winchWindSwitch.whileHeld(winch.getWinchWindUp());
 		winchUnWindSwitch.whileHeld(winch.getWinchUnWind()); 
@@ -83,54 +85,75 @@ public class Robot extends IterativeRobot {
 	
 	private int phase = 0;
 	private long startTime = 0;
-	public void autonomousPeriodic() {
+	private int executePhase( long duration, double speed, double curve )
+	{
+		long dur = System.currentTimeMillis() - startTime;
+		System.out.println("Phases" + phase + ":" + dur);
+		if( dur < duration )
+		{
+			driveTrain.drive(speed, curve);
+		}
+		else 
+		{
+			phase++;
+			startTime = System.currentTimeMillis();
+			System.out.println("new phase:" + phase );
+		}
+		
+		return phase;
+	}
+	
+	public void autonomousPeriodic()
+	{
 		Scheduler.getInstance().run();
+		
 		if( startTime == 0 )
 			startTime = System.currentTimeMillis();
-		
+
 		if( phase == 0 )
-		{
-			if( System.currentTimeMillis() - startTime < 250 )
-			{
-				driveTrain.drive(.5, 0);
-			}
-			else 
-			{
-				phase = 1;
-				startTime = System.currentTimeMillis();
-			}
-		}		
+			executePhase(500, .5, 0 );
 		else if( phase == 1 )
-		{
-			if( System.currentTimeMillis() - startTime < 500 )
-			{
-				driveTrain.drive(.5, 1);
-			}	
-			else 
-			{
-				phase = 2;
-				startTime = System.currentTimeMillis();
-			}
-		}
+			executePhase(750, .5, 1 );
 		else if( phase == 2 )
-		{
-			if( System.currentTimeMillis() - startTime < 250 )
-			{
-				driveTrain.drive(.5, 0);
-			}
-			else 
-			{
-				phase = 3;
-				startTime = System.currentTimeMillis();
-			}
-		}	
-		else
-		{
-			phase = 0;
-		}
-	
-		
-		
+			executePhase(500, .5, 0 );
+		else if( phase == 3 )
+			executePhase(750, .5, 1);
+		else if( phase == 4 )
+			executePhase(500, .5, 0 );
+		else if( phase == 5 )
+			executePhase(750, .5, 1);
+		else if( phase == 6 )
+			executePhase(500, .5, 0);
+		else if( phase == 7 )
+			executePhase(750, .5, 1);
+		else if( phase == 8 )
+			executePhase(500, .5, 0 );
+		else if( phase == 9 )
+			executePhase(750, .5, 1 );
+		else if( phase == 10 )
+			executePhase(500, .5, 0);
+		else if( phase == 11 )
+			executePhase(750, .5, -1 );
+		else if( phase == 12 )
+			executePhase(500, .5, 0);
+		else if( phase == 13 )
+			executePhase(750, .5, -1);
+		else if( phase == 14 )
+			executePhase(500, .5, 0);
+		else if( phase == 15 )
+			executePhase(750,.5,-1);
+		else if( phase == 16 )
+			executePhase(500, .5, 0);
+		else if( phase == 17 )
+			executePhase(750, .5, -1);
+		else if( phase == 18 )
+			executePhase(500, .5, 0);
+		else if( phase == 19 )
+			executePhase(750,.5,-1);
+		else if( phase == 20 )
+			executePhase(500, .5, 0);
+		else 
+			executePhase(0, 0, 0);
 	}
 
 	public void disabledPeriodic()
