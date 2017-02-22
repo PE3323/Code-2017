@@ -1,78 +1,61 @@
 package org.usfirst.frc.team3323.robot;
 
 
-import org.usfirst.frc.team3323.robot.Commands.TestDrive;
-import org.usfirst.frc.team3323.robot.Subsystems.FuelPickup;
-import org.usfirst.frc.team3323.robot.Subsystems.Launcher;
-import org.usfirst.frc.team3323.robot.Subsystems.Winch;
+import org.opencv.core.Mat;
+import org.usfirst.frc.team3323.robot.Drivetrain.Drivetrain;
+import org.usfirst.frc.team3323.robot.FuelPickup.FuelPickup;
+import org.usfirst.frc.team3323.robot.Launcher.Launcher;
+import org.usfirst.frc.team3323.robot.Winch.Winch;
+
+import edu.wpi.cscore.CvSink;
+import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
-import edu.wpi.first.wpilibj.RobotDrive;
-import edu.wpi.first.wpilibj.Spark;
-import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.buttons.Button;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
-	
-	private Joystick joystickRight = new Joystick(1);
-	private Joystick joystickLeft = new Joystick(0);
+	private Joystick joystickLeft = new Joystick(1);
+	private Joystick joystickRight = new Joystick(0);
 	
 	//Subsystems
 	private Winch winch = new Winch();
 	private FuelPickup fuelPickup = new FuelPickup();
 	private Launcher launcher = new Launcher(joystickRight);
+	private Drivetrain driveBase = new Drivetrain(joystickLeft, joystickRight);
+	private Controls controls = new Controls(winch, fuelPickup, launcher, driveBase, joystickRight, joystickLeft);
 	
-	//Tank Drive
-	private SpeedController driveMotorLeft = new Spark(1);
-	private SpeedController driveMotorRight = new Spark(2);
-	private RobotDrive driveTrain = new RobotDrive(driveMotorRight, driveMotorLeft);
-	
-	//DashBoard
 	private PowerDistributionPanel powerBoard = new PowerDistributionPanel();
-	
-	//Buttons
-	private Button winchWindSwitch = new JoystickButton(joystickRight,5);
-	private Button winchUnWindSwitch = new JoystickButton(joystickRight,4);
-	private Button fuelPickupSwitch = new JoystickButton(joystickRight,2);
-	private Button launcherSupplySwitch = new JoystickButton(joystickRight, 1);
-	private Button fuelPickupDirectionSwitch = new JoystickButton(joystickRight, 3);
-	
-	//Commands
-	private TestDrive testDrive = new TestDrive(driveMotorLeft, driveMotorLeft);
 
 	@Override
 	public void robotInit() {
 		
-		launcher.init();
 		winch.init();
 		fuelPickup.init();
-		driveTrain.tankDrive(joystickRight,joystickLeft);
-		winchWindSwitch.whileHeld(winch.getWinchWindUp());
-		winchUnWindSwitch.whileHeld(winch.getWinchUnWind()); 
-		fuelPickupSwitch.toggleWhenPressed(fuelPickup.getStartPickup());
-		fuelPickupDirectionSwitch.whenPressed(fuelPickup.getPickupDirectionToggle());
-		launcherSupplySwitch.whileHeld(launcher.getStartSupply());
-		SmartDashboard.putData("Drivetrain Test", testDrive); 
+		controls.init();
+		UsbCamera robotCam = CameraServer.getInstance().startAutomaticCapture();
+		UsbCamera gearCam = CameraServer.getInstance().startAutomaticCapture();
+		robotCam.setResolution(640, 480);
+		gearCam.setResolution(640, 480);
 		SmartDashboard.putData(Scheduler.getInstance());
-		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-		camera.setResolution(800, 800);	
-		
 	}
 	
 	@Override
 	public void robotPeriodic() {
 		
-		SmartDashboard.putNumber("PowerBoardTemp", powerBoard.getTemperature());
+		SmartDashboard.putNumber("PowerBoardTemp", (powerBoard.getTemperature()*1.8)+32);
 		SmartDashboard.putNumber("PowerBoardVoltage", powerBoard.getVoltage());
-		SmartDashboard.putNumber("DriveMotorLCurrent", powerBoard.getCurrent(1));
-		SmartDashboard.putNumber("ShooterMotorCurrent", powerBoard.getCurrent(2));
-		SmartDashboard.putNumber("DriveMotorRCurrent", powerBoard.getCurrent(3));
+		SmartDashboard.putNumber("Drive Left", powerBoard.getCurrent(12));
+		SmartDashboard.putNumber("Shooter", powerBoard.getCurrent(0));
+		SmartDashboard.putNumber("Drive Right", powerBoard.getCurrent(13));
+		SmartDashboard.putNumber("Feeder", powerBoard.getCurrent(1));
+		SmartDashboard.putNumber("Winch Right", powerBoard.getCurrent(3));
+		SmartDashboard.putNumber("Winch Left", powerBoard.getCurrent(2));
+		SmartDashboard.putNumber("Fuel Pickup", powerBoard.getCurrent(15));
+		SmartDashboard.putNumber("Mixer", powerBoard.getCurrent(14));
 	}
 	
 	@Override
@@ -91,7 +74,7 @@ public class Robot extends IterativeRobot {
 		System.out.println("Phases" + phase + ":" + dur);
 		if( dur < duration )
 		{
-			driveTrain.drive(speed, curve);
+//			driveBase.tankDrive(speed, curve);
 		}
 		else 
 		{
@@ -163,10 +146,20 @@ public class Robot extends IterativeRobot {
 	}
 	
 	@Override
-	public void teleopPeriodic() {		
+	public void teleopPeriodic()
+	{		
 		
 		Scheduler.getInstance().run();
-		driveTrain.tankDrive(joystickLeft,joystickRight);	
 	}
+	 public void track()
+	 {
+		CvSink imageSink = CameraServer.getInstance().getVideo();
+		CvSource outputStream = CameraServer.getInstance().putVideo("Tracked", 640, 480);
+		Mat input = new Mat();
+		Mat output = new Mat();
+		imageSink.grabFrame(input);	
+		input.copyTo(output);
+		outputStream.putFrame(output);
+	 }
 }
 
