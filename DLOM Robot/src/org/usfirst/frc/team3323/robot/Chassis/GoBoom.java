@@ -1,22 +1,23 @@
-package org.usfirst.frc.team3323.robot.Drivetrain;
+package org.usfirst.frc.team3323.robot.Chassis;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class GoBoom extends Command {
-	private Drivetrain drivetrain;
+public class GoBoom extends Command
+{
+	private Chassis drivetrain;
 	
-	public GoBoom( Drivetrain drivetrain )
+	public GoBoom( Chassis drivetrain )
 	{
 		requires(drivetrain);
 		this.drivetrain = drivetrain;
 	}
 	
-	@Override
 	protected boolean isFinished()
 	{
 		return false;
 	}
-	protected void execute()
+	
+	public void execute()
 	{
 		drivetrain.boom();
 	}

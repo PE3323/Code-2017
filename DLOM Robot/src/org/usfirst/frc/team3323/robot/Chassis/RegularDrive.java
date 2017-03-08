@@ -1,12 +1,12 @@
-package org.usfirst.frc.team3323.robot.Drivetrain;
+package org.usfirst.frc.team3323.robot.Chassis;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 public class RegularDrive extends Command
 {
-	private Drivetrain drivetrain;
+	private Chassis drivetrain;
 	
-	public RegularDrive(Drivetrain drivetrain)
+	public RegularDrive(Chassis drivetrain)
 	{
 		requires(drivetrain);
 		this.drivetrain= drivetrain;

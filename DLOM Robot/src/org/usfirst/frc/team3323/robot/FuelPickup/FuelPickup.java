@@ -1,5 +1,6 @@
 package org.usfirst.frc.team3323.robot.FuelPickup;
 
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -8,7 +9,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class FuelPickup extends Subsystem
 {
 	private SpeedController pickupMotor = new Spark(7);
+	private PowerDistributionPanel powerBoard;
 	
+	public FuelPickup(PowerDistributionPanel powerBoard)
+	{
+		this.powerBoard = powerBoard;
+	}
+
 	protected void initDefaultCommand()
 	{
 		setDefaultCommand(new StopPickup(this));
@@ -23,12 +30,6 @@ public class FuelPickup extends Subsystem
 	{
 		return new StartPickup(this);
 	}
-	
-	
-	public void init()
-    {
-    	stop();
-    }
 
 	public void start()
 	{
@@ -42,5 +43,10 @@ public class FuelPickup extends Subsystem
 		pickupMotor.set(0);
 		
 		SmartDashboard.putString("Pickup State","Off");
+	}
+	
+	public void info()
+	{
+		SmartDashboard.putNumber("Fuel Pickup", powerBoard.getCurrent(15));
 	}
 }

@@ -1,12 +1,12 @@
-package org.usfirst.frc.team3323.robot.Drivetrain;
+package org.usfirst.frc.team3323.robot.Chassis;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 public class InverseDrive extends Command
 {
-	private Drivetrain drivetrain;
+	private Chassis drivetrain;
 	
-	public InverseDrive(Drivetrain drivetrain)
+	public InverseDrive(Chassis drivetrain)
 	{
 		requires(drivetrain);
 		this.drivetrain= drivetrain;

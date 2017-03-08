@@ -1,13 +1,12 @@
-package org.usfirst.frc.team3323.robot.Drivetrain;
+package org.usfirst.frc.team3323.robot.Chassis;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class TankDrive extends Command
 {
-	private Drivetrain driveTrain;
+	private Chassis driveTrain;
 	
-	public TankDrive(Drivetrain driveTrain)
+	public TankDrive(Chassis driveTrain)
 	{
 		requires(driveTrain);
 		this.driveTrain = driveTrain;
@@ -17,7 +16,6 @@ public class TankDrive extends Command
 	public void execute()
 	{
 		driveTrain.drive();
-		SmartDashboard.putString("Robot State","OK");
 	}
 
 	@Override
